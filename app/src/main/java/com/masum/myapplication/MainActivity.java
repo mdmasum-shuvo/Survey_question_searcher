@@ -24,22 +24,22 @@ public class MainActivity extends AppCompatActivity {
     int completeIndIndex = 1;
     boolean isfinishedTravarse = false;
     int tree = 0;
+    int sectionVisit = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        questionList = sectionList.get(0).getQuestionList();
+        questionList = sectionList.get(sectionVisit).getQuestionList();
         independentQuestionList(questionList);
         Button button = findViewById(R.id.btn_search);
         button.setOnClickListener(v -> {
             searcingalgorithm();
         });
-
-
     }
 
     private void searcingalgorithm() {
+
         if (stack.isEmpty()) {
             if (tree > independentList.size() - 1) {
                 Log.e("search", "finish All");
@@ -60,7 +60,26 @@ public class MainActivity extends AppCompatActivity {
                 travarseQuestion();
             if (stack.isEmpty()) {
                 if (tree > independentList.size() - 1) {
+                    if (!independentList.isEmpty()) {
+                        independentList.clear();
+                    }
+                    sectionVisit++;
+                    if (sectionVisit >= sectionList.size()) {
+                        Log.e("search", "finish All section");
+                        return;
+                    }
+                    questionList = sectionList.get(sectionVisit).getQuestionList();
+                    independentQuestionList(questionList);
+                    if (!founderQuestionList.isEmpty()) {
+                        founderQuestionList.clear();
+                    }
+                    tree = 1;
+                    stack.clear();
+                    stack.push(0);
+                    currentStack = stack.peek();
                     Log.e("search", "finish All");
+                    Log.e("search", String.valueOf(questionList.get(currentStack).getQuestionTitle()));
+                    // searcingalgorithm();
                 } else {
                     isfinishedTravarse = false;
                     Log.e("search", "finish game");
